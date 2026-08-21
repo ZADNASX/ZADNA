@@ -217,6 +217,121 @@
     .badge-doctype.bilan{ color:#00806F; border-color:#7FDACE; background:#EFFCFA; }
     .badge-doctype.proforma{ color:var(--c1); border-color:#B7C4FF; background:#F1F4FF; }
 
+    /* ---------- PROFORMA LIBRE : lignes de saisie ---------- */
+    .libre-ligne{
+        border:1px solid var(--line);
+        padding:12px;
+        margin-bottom:10px;
+        background:var(--soft);
+        position:relative;
+    }
+    .libre-ligne-row1{ margin-bottom:10px; }
+    .libre-ligne-row2{
+        display:grid;
+        grid-template-columns:1fr 1fr 1fr;
+        gap:8px;
+    }
+    .libre-ligne input{ background:var(--paper); }
+    .libre-ligne-montant{
+        grid-column:1 / -1;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:10px;
+        padding-top:10px;
+        border-top:1px dashed var(--line);
+    }
+    .libre-ligne-montant strong{ font-size:15px; }
+    .btn-ligne-supprimer{
+        background:none;
+        border:none;
+        font-family:'JetBrains Mono', monospace;
+        font-size:9px;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        color:var(--c3);
+        cursor:pointer;
+        padding:2px 0;
+        border-bottom:1px solid transparent;
+    }
+    .btn-ligne-supprimer:active{ border-bottom-color:var(--c3); }
+
+    /* ---------- INTERRUPTEUR CACHET ---------- */
+    .switch-row{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        border:1px solid var(--line);
+        background:var(--soft);
+        padding:13px 14px;
+        margin-bottom:16px;
+        cursor:pointer;
+    }
+    .switch-txt{
+        font-family:'JetBrains Mono', monospace;
+        font-size:10px;
+        letter-spacing:1.4px;
+        text-transform:uppercase;
+        color:var(--ink);
+    }
+    .switch-row input[type="checkbox"]{
+        appearance:none;
+        -webkit-appearance:none;
+        width:44px;
+        height:24px;
+        border:1px solid var(--line);
+        background:#fff;
+        position:relative;
+        flex-shrink:0;
+        cursor:pointer;
+        transition:background .18s ease, border-color .18s ease;
+        margin:0;
+        padding:0;
+    }
+    .switch-row input[type="checkbox"]::after{
+        content:'';
+        position:absolute;
+        top:3px; left:3px;
+        width:16px; height:16px;
+        background:var(--grey);
+        transition:transform .18s ease, background .18s ease;
+    }
+    .switch-row input[type="checkbox"]:checked{ background:var(--c1); border-color:var(--c1); }
+    .switch-row input[type="checkbox"]:checked::after{ transform:translateX(20px); background:#fff; }
+
+    /* ---------- PAVÉ DE SIGNATURE ---------- */
+    .signature-canvas{
+        width:100%;
+        height:170px;
+        border:1.5px dashed var(--line);
+        background:#fff;
+        touch-action:none;
+        cursor:crosshair;
+        display:block;
+    }
+    .btn-group-row{ display:flex; gap:10px; }
+    .btn-group-row .btn-secondary, .btn-group-row .btn-primary{ flex:1; margin-top:10px; }
+
+    .libre-total-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-top:16px;
+        padding-top:16px;
+        border-top:2px solid var(--ink);
+        font-weight:600;
+        font-size:17px;
+        letter-spacing:-0.4px;
+    }
+
+    .eyebrow-row{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-top:14px;
+        gap:12px;
+    }
     .eyebrow{
         font-family:'JetBrains Mono', monospace;
         font-size:10px;
@@ -225,7 +340,7 @@
         color:var(--grey);
         display:flex;
         align-items:center;
-        margin-top:14px;
+        min-width:0;
     }
     .eyebrow::before{
         content:'';
@@ -235,6 +350,20 @@
         flex-shrink:0;
         margin-right:9px;
     }
+    .btn-backup{
+        font-family:'JetBrains Mono', monospace;
+        font-size:9.5px;
+        letter-spacing:1.2px;
+        text-transform:uppercase;
+        background:none;
+        border:none;
+        color:var(--grey);
+        cursor:pointer;
+        padding:2px 0;
+        border-bottom:1px solid rgba(255,255,255,.28);
+        flex-shrink:0;
+    }
+    .btn-backup:active{ color:#fff; border-bottom-color:#fff; }
 
     /* ---------- MAIN ---------- */
     .main-container{
@@ -742,17 +871,18 @@
             text-align:right;
             font-family:'JetBrains Mono', monospace;
             font-size:9px;
-            line-height:1.8;
+            line-height:1.45;
             color:#4A4A4A;
         }
-        .inv-issued-on{
-            margin-top:7px;
-            padding-top:6px;
-            border-top:1px solid #E4E4E4;
+        .inv-date-row{
+            text-align:right;
+            font-family:'JetBrains Mono', monospace;
+            font-size:9.5px;
             color:#0A0A0A;
+            margin-top:10px;
         }
 
-        .inv-title-row{ margin:26px 0 22px; }
+        .inv-title-row{ margin:22px 0 22px; }
         .inv-eyebrow{
             font-family:'JetBrains Mono', monospace;
             font-size:9px;
@@ -822,6 +952,7 @@
         }
         .inv-marchandise::before{ content:'↳ '; }
         .inv-table td.amt{ text-align:right; font-weight:600; white-space:nowrap; }
+        .inv-table td.ctr{ text-align:center; font-family:'JetBrains Mono', monospace; font-size:10.5px; color:#4A4A4A; }
         .inv-table tr:last-child td{ border-bottom:1.5px solid #0A0A0A; }
 
         .inv-total-wrap{ display:flex; justify-content:flex-end; }
@@ -862,6 +993,39 @@
             line-height:1.7;
         }
         .sig-box span{ color:#8A8A8A; }
+
+        /* Cachet + signature imbriqués : la signature chevauche le cachet,
+           comme sur un document réellement paraphé et tamponné. */
+        .inv-stamp-wrap{
+            position:relative;
+            display:inline-block;
+            margin-top:12px;
+            min-height:112px;
+        }
+
+        .inv-cachet{ display:none; }
+        #invoicePrintArea.with-cachet .inv-cachet{ display:block; }
+        .inv-cachet svg{
+            width:186px;
+            height:auto;
+            -webkit-print-color-adjust:exact;
+            print-color-adjust:exact;
+        }
+
+        .inv-signature{
+            display:none;
+            position:absolute;
+            left:8px;
+            top:32px;
+            width:150px;
+            max-height:76px;
+            transform:rotate(-6deg);
+            z-index:2;
+            pointer-events:none;
+            -webkit-print-color-adjust:exact;
+            print-color-adjust:exact;
+        }
+        #invoicePrintArea.with-signature .inv-signature{ display:block; }
 
         .inv-foot{
             margin-top:34px;
@@ -905,7 +1069,10 @@
             </div>
             <button class="badge-client" id="badgeClientActif" onclick="reinitialiserFormulaireClient(); renderClients(); ouvrirModal('modalClients')">Axolus Bénin</button>
         </div>
-        <div class="eyebrow">Suivi financier des prestations</div>
+        <div class="eyebrow-row">
+            <div class="eyebrow">Suivi financier des prestations</div>
+            <button class="btn-backup" onclick="ouvrirModal('modalSauvegarde')">Sauvegarde</button>
+        </div>
     </header>
 
     <div class="main-container">
@@ -952,7 +1119,7 @@
 
         <div class="section-head">
             <span class="section-title">Historique</span>
-            <button class="btn-ghost" onclick="renderBilans(); ouvrirModal('modalBilans')">Bilans archivés</button>
+            <button class="btn-ghost" onclick="renderBilans(); renderProformasLibres(); ouvrirModal('modalBilans')">Bilans archivés</button>
         </div>
 
         <div class="filter-tabs">
@@ -1050,7 +1217,13 @@
             <span class="modal-title">Documents archivés</span>
             <button class="btn-close-modal" onclick="fermerModal('modalBilans')">✕</button>
         </div>
+        <div class="modal-subtitle">Bilans &amp; proformas du client actif</div>
         <div id="bilansList"></div>
+
+        <hr class="modal-divider">
+
+        <div class="modal-subtitle">Proformas libres (prestations diverses)</div>
+        <div id="libresListArchive"></div>
     </div>
 </div>
 
@@ -1112,6 +1285,13 @@
             <button class="btn-close-modal" onclick="fermerModal('modalDocType')">✕</button>
         </div>
         <p class="modal-note">Pour les prestations en attente du client actif.</p>
+
+        <label class="switch-row">
+            <span class="switch-txt">Apposer le cachet ZADNA</span>
+            <input type="checkbox" id="switchCachet" onchange="majPrefCachet()">
+        </label>
+        <div id="signatureSwitchArea"></div>
+
         <div class="doctype-grid">
             <button type="button" class="btn-doctype" onclick="genererDocument('bilan')">
                 <span class="doctype-lbl">Bilan</span>
@@ -1122,6 +1302,112 @@
                 <span class="doctype-sub">Estimation à envoyer</span>
             </button>
         </div>
+
+        <hr class="modal-divider">
+
+        <div class="modal-subtitle">Autre besoin</div>
+        <button type="button" class="btn-secondary" style="margin-top:0;" onclick="fermerModal('modalDocType'); ouvrirProformaLibre();">Proforma libre — prestations diverses</button>
+    </div>
+</div>
+
+<!-- MODAL 8 : PROFORMA LIBRE (PRESTATIONS DIVERSES) -->
+<div id="modalProformaLibre" class="modal-overlay" onclick="fermerModalSurFond(event, 'modalProformaLibre')">
+    <div class="modal-sheet">
+        <div class="modal-header">
+            <span class="modal-title">Proforma libre</span>
+            <button class="btn-close-modal" onclick="fermerModal('modalProformaLibre')">✕</button>
+        </div>
+        <p class="modal-note">Pour une prestation ponctuelle, hors suivi des courses de transport.</p>
+
+        <form id="formProformaLibre" onsubmit="genererProformaLibre(event)">
+            <div class="form-group">
+                <label>Nom du client</label>
+                <input type="text" id="inputLibreClientNom" placeholder="Ex: Société Kponou & Fils" required>
+            </div>
+            <div class="form-group">
+                <label>Précisions client (optionnel)</label>
+                <input type="text" id="inputLibreClientInfo" placeholder="Adresse, contact, RCCM...">
+            </div>
+
+            <hr class="modal-divider">
+
+            <div class="modal-subtitle">Lignes de la prestation</div>
+            <div id="libreLignesContainer"></div>
+            <button type="button" class="btn-secondary" onclick="ajouterLigneLibre()">+ Ajouter une ligne</button>
+
+            <div class="libre-total-row">
+                <span class="lbl">Total</span>
+                <span id="libreTotalAffiche">0 FCFA</span>
+            </div>
+
+            <label class="switch-row">
+                <span class="switch-txt">Apposer le cachet ZADNA</span>
+                <input type="checkbox" id="switchCachetLibre" onchange="majPrefCachetLibre()">
+            </label>
+            <div id="signatureSwitchAreaLibre"></div>
+
+            <button type="submit" class="btn-primary">Générer la proforma</button>
+        </form>
+
+        <datalist id="listeUnites">
+            <option value="Voyage"></option>
+            <option value="Rotation"></option>
+            <option value="Forfait"></option>
+            <option value="Heure"></option>
+            <option value="Jour"></option>
+            <option value="Kg"></option>
+            <option value="Tonne"></option>
+            <option value="Sac"></option>
+            <option value="Unité"></option>
+            <option value="M³"></option>
+            <option value="M²"></option>
+            <option value="Litre"></option>
+        </datalist>
+    </div>
+</div>
+
+<!-- MODAL 9 : MA SIGNATURE -->
+<div id="modalSignature" class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')) fermerSignatureEtRetour();">
+    <div class="modal-sheet">
+        <div class="modal-header">
+            <span class="modal-title">Ma signature</span>
+            <button class="btn-close-modal" onclick="fermerSignatureEtRetour()">✕</button>
+        </div>
+        <p class="modal-note">Dessine ta signature au doigt ou à la souris. Elle est enregistrée sur cet appareil et réutilisée sur tous tes documents.</p>
+
+        <div class="modal-subtitle">Signature actuellement enregistrée</div>
+        <div id="signaturePreviewWrap" style="margin-bottom:18px;"></div>
+
+        <hr class="modal-divider">
+
+        <div class="modal-subtitle">Dessiner une nouvelle signature</div>
+        <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+        <div class="btn-group-row">
+            <button type="button" class="btn-secondary" style="margin-top:10px;" onclick="effacerSignatureCanvas()">Effacer</button>
+            <button type="button" class="btn-primary" style="margin-top:10px;" onclick="enregistrerSignatureDessinee()">Enregistrer la signature</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 7 : SAUVEGARDE (EXPORT / IMPORT) -->
+<div id="modalSauvegarde" class="modal-overlay" onclick="fermerModalSurFond(event, 'modalSauvegarde')">
+    <div class="modal-sheet">
+        <div class="modal-header">
+            <span class="modal-title">Sauvegarde des données</span>
+            <button class="btn-close-modal" onclick="fermerModal('modalSauvegarde')">✕</button>
+        </div>
+
+        <p class="modal-note">Toutes tes données (clients, courses, documents, capital) sont enregistrées uniquement sur cet appareil. Télécharge une sauvegarde régulièrement pour ne rien perdre.</p>
+
+        <div class="modal-subtitle">Exporter</div>
+        <button type="button" class="btn-primary" onclick="exporterSauvegarde()">Télécharger la sauvegarde</button>
+
+        <hr class="modal-divider">
+
+        <div class="modal-subtitle">Restaurer une sauvegarde</div>
+        <p class="modal-note" style="margin-bottom:12px;">Remplace toutes les données actuelles de cet appareil par celles du fichier choisi. À utiliser sur un nouveau téléphone ou après un problème.</p>
+        <input type="file" id="inputFichierSauvegarde" accept="application/json,.json" style="display:none;" onchange="importerSauvegarde(event)">
+        <button type="button" class="btn-secondary" onclick="document.getElementById('inputFichierSauvegarde').click()">Choisir un fichier à restaurer</button>
     </div>
 </div>
 
@@ -1154,9 +1440,10 @@
             RCCM : RB/COT/26 B 44001<br>
             IFU : 3202682190953<br>
             zadna.sol.x@gmail.com · 01 47 47 47 00
-            <div class="inv-issued-on" id="inv-generated-date">Le --/--/----</div>
         </div>
     </div>
+
+    <div class="inv-date-row" id="inv-generated-date">Le --/--/----</div>
 
     <div class="inv-title-row">
         <div class="inv-eyebrow" id="inv-eyebrow">Bilan de prestations — <span id="inv-ref">N° —</span></div>
@@ -1192,7 +1479,7 @@
 
     <table class="inv-table">
         <thead>
-            <tr>
+            <tr id="inv-thead-row">
                 <th style="width:14%;">Date</th>
                 <th style="width:56%;">Désignation / trajet</th>
                 <th style="width:30%; text-align:right;">Montant (FCFA)</th>
@@ -1209,7 +1496,35 @@
     </div>
 
     <div class="inv-sigs" id="inv-sigs">
-        <div class="sig-box">Le prestataire<br><span>ZADNA.SOL.X</span></div>
+        <div class="sig-box">Le prestataire<br><span>ZADNA.SOL.X</span>
+            <div class="inv-stamp-wrap">
+            <div class="inv-cachet">
+                <svg viewBox="0 0 300 176" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="5" y="5" width="290" height="166" fill="none" stroke="#3B5BFF" stroke-width="4.5"/>
+                    <rect x="14" y="14" width="272" height="148" fill="none" stroke="#3B5BFF" stroke-width="1.6"/>
+                    <g transform="translate(28,24) scale(0.5)">
+                        <line x1="60" y1="60" x2="60" y2="14" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="106" y2="60" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="60" y2="106" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="14" y2="60" stroke="#3B5BFF" stroke-width="7"/>
+                        <circle cx="60" cy="14" r="10" fill="#3B5BFF"/>
+                        <circle cx="106" cy="60" r="10" fill="#3B5BFF"/>
+                        <circle cx="60" cy="106" r="10" fill="#3B5BFF"/>
+                        <circle cx="14" cy="60" r="10" fill="#3B5BFF"/>
+                        <circle cx="60" cy="60" r="14" fill="#3B5BFF"/>
+                        <circle cx="60" cy="60" r="5.5" fill="#FFFFFF"/>
+                    </g>
+                    <text x="100" y="50" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="26" letter-spacing="-0.4">ZADNA.SOL.X</text>
+                    <text x="100" y="70" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="11" letter-spacing="2.5">SARL</text>
+                    <line x1="30" y1="88" x2="270" y2="88" stroke="#3B5BFF" stroke-width="1.4"/>
+                    <text x="30" y="109" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="12.5">RCCM : RB/COT/26 B 44001</text>
+                    <text x="30" y="128" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="12.5">IFU : 3202682190953</text>
+                    <text x="30" y="150" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="11.5">Cotonou, Bénin · 01 47 47 47 00</text>
+                </svg>
+            </div>
+            <img id="inv-signature-img" class="inv-signature" src="" alt="Signature">
+            </div>
+        </div>
         <div class="sig-box" id="inv-sig-client">Pour le client<br><span>Bon pour accord</span></div>
     </div>
 
@@ -1227,6 +1542,10 @@
     const STORAGE_KEY = 'axolus_transport_trips_v1';
     const CAPITAL_KEY = 'axolus_transport_capital_v1';
     const BILANS_KEY  = 'axolus_transport_bilans_v1';
+    const PROFORMA_LIBRE_KEY = 'axolus_transport_proformas_libres_v1';
+    const CACHET_KEY = 'axolus_transport_cachet_v1';
+    const SIGNATURE_KEY = 'axolus_transport_signature_v1';
+    const SIGNATURE_PREF_KEY = 'axolus_transport_signature_pref_v1';
     const CLIENTS_KEY = 'axolus_transport_clients_v1';
     const ACTIVE_CLIENT_KEY = 'axolus_transport_active_client_v1';
 
@@ -1300,6 +1619,216 @@
     const bilansStockes = store.get(BILANS_KEY, null);
     let bilans = Array.isArray(bilansStockes) ? bilansStockes : [];
     bilans = bilans.map(b => (b.clientId && b.type) ? b : { ...b, clientId: b.clientId || DEFAULT_CLIENT_ID, type: b.type || 'bilan' });
+
+    const proformasLibresStockes = store.get(PROFORMA_LIBRE_KEY, null);
+    let proformasLibres = Array.isArray(proformasLibresStockes) ? proformasLibresStockes : [];
+    let libreLigneCounter = 0;
+
+    /* Préférence cachet : activée par défaut */
+    const cachetStocke = store.get(CACHET_KEY, null);
+    let cachetActif = (cachetStocke === null) ? true : (cachetStocke === true);
+
+    function majPrefCachet() {
+        cachetActif = document.getElementById('switchCachet').checked;
+        store.set(CACHET_KEY, cachetActif);
+        syncSwitchesCachet();
+    }
+
+    function majPrefCachetLibre() {
+        cachetActif = document.getElementById('switchCachetLibre').checked;
+        store.set(CACHET_KEY, cachetActif);
+        syncSwitchesCachet();
+    }
+
+    function syncSwitchesCachet() {
+        const a = document.getElementById('switchCachet');
+        const b = document.getElementById('switchCachetLibre');
+        if (a) a.checked = cachetActif;
+        if (b) b.checked = cachetActif;
+    }
+
+    function appliquerCachet() {
+        document.getElementById('invoicePrintArea').classList.toggle('with-cachet', cachetActif);
+    }
+
+    /* ---------- SIGNATURE MANUSCRITE (dessinée à l'écran) ---------- */
+    const signatureStockee = store.get(SIGNATURE_KEY, null);
+    let signatureDataUrl = (typeof signatureStockee === 'string' && signatureStockee) ? signatureStockee : null;
+
+    const signaturePrefStockee = store.get(SIGNATURE_PREF_KEY, null);
+    let signatureActif = (signaturePrefStockee === null) ? !!signatureDataUrl : (signaturePrefStockee === true);
+
+    let retourApresSignature = null;
+    let dessinEnCours = false;
+    let dernierPointDessin = null;
+
+    function ouvrirSignatureModal(retour) {
+        retourApresSignature = retour || null;
+        renderApercuSignature();
+        ouvrirModal('modalSignature');
+        initCanvasSignature();
+    }
+
+    function fermerSignatureEtRetour() {
+        fermerModal('modalSignature');
+        if (retourApresSignature === 'docType') {
+            renderSignatureSwitchArea('signatureSwitchArea', 'switchSignature', false);
+            syncSwitchesCachet();
+            ouvrirModal('modalDocType');
+        } else if (retourApresSignature === 'proformaLibre') {
+            renderSignatureSwitchArea('signatureSwitchAreaLibre', 'switchSignatureLibre', true);
+            syncSwitchesCachet();
+            ouvrirModal('modalProformaLibre');
+        }
+        retourApresSignature = null;
+    }
+
+    function initCanvasSignature() {
+        const canvas = document.getElementById('signatureCanvas');
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        effacerSignatureCanvas();
+    }
+
+    function effacerSignatureCanvas() {
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        /* Fond transparent (pas de fillRect) : le PNG exporté n'a que le tracé,
+           ce qui permet de le superposer au cachet sans cacher ce qu'il y a dessous. */
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.lineWidth = 2.6;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#0A0A0A';
+    }
+
+    function positionSurCanvas(e) {
+        const canvas = document.getElementById('signatureCanvas');
+        const rect = canvas.getBoundingClientRect();
+        return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }
+
+    function debutDessinSignature(e) {
+        dessinEnCours = true;
+        dernierPointDessin = positionSurCanvas(e);
+        const canvas = document.getElementById('signatureCanvas');
+        if (canvas.setPointerCapture) { try { canvas.setPointerCapture(e.pointerId); } catch (err) {} }
+    }
+
+    function dessinerSignature(e) {
+        if (!dessinEnCours) return;
+        e.preventDefault();
+        const pos = positionSurCanvas(e);
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.moveTo(dernierPointDessin.x, dernierPointDessin.y);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        dernierPointDessin = pos;
+    }
+
+    function finDessinSignature() {
+        dessinEnCours = false;
+        dernierPointDessin = null;
+    }
+
+    function initEcouteursCanvasSignature() {
+        const canvas = document.getElementById('signatureCanvas');
+        if (!canvas) return;
+        canvas.addEventListener('pointerdown', debutDessinSignature);
+        canvas.addEventListener('pointermove', dessinerSignature, { passive: false });
+        canvas.addEventListener('pointerup', finDessinSignature);
+        canvas.addEventListener('pointerleave', finDessinSignature);
+        canvas.addEventListener('pointercancel', finDessinSignature);
+    }
+
+    function enregistrerSignatureDessinee() {
+        const canvas = document.getElementById('signatureCanvas');
+        const ctx = canvas.getContext('2d');
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let dessine = false;
+        for (let i = 3; i < data.length; i += 4) {
+            if (data[i] > 10) { dessine = true; break; }
+        }
+        if (!dessine) { alert("Dessine ta signature avant d'enregistrer."); return; }
+
+        signatureDataUrl = canvas.toDataURL('image/png');
+        store.set(SIGNATURE_KEY, signatureDataUrl);
+        signatureActif = true;
+        store.set(SIGNATURE_PREF_KEY, true);
+        fermerSignatureEtRetour();
+    }
+
+    function supprimerSignatureEnregistree() {
+        if (!confirm("Supprimer ta signature enregistrée ?")) return;
+        signatureDataUrl = null;
+        store.set(SIGNATURE_KEY, null);
+        signatureActif = false;
+        store.set(SIGNATURE_PREF_KEY, false);
+        renderApercuSignature();
+        effacerSignatureCanvas();
+    }
+
+    function renderApercuSignature() {
+        const wrap = document.getElementById('signaturePreviewWrap');
+        if (!wrap) return;
+        if (signatureDataUrl) {
+            wrap.innerHTML =
+                '<img src="' + signatureDataUrl + '" alt="Signature enregistrée" style="max-width:220px; max-height:76px; display:block; margin-bottom:10px; border:1px solid var(--line); background:#fff; padding:8px;">' +
+                '<button type="button" class="btn-delete" onclick="supprimerSignatureEnregistree()">Supprimer la signature enregistrée</button>';
+        } else {
+            wrap.innerHTML = '<div class="empty-state">Aucune signature enregistrée</div>';
+        }
+    }
+
+    function renderSignatureSwitchArea(containerId, switchId, forLibre) {
+        const c = document.getElementById(containerId);
+        if (!c) return;
+        const retourId = forLibre ? 'proformaLibre' : 'docType';
+        const modalOrigine = forLibre ? 'modalProformaLibre' : 'modalDocType';
+        const majFn = forLibre ? 'majPrefSignatureLibre()' : 'majPrefSignature()';
+
+        if (!signatureDataUrl) {
+            c.innerHTML = '<button type="button" class="btn-secondary" style="margin:0 0 16px;" onclick="fermerModal(\'' + modalOrigine + '\'); ouvrirSignatureModal(\'' + retourId + '\');">✎ Dessiner ma signature</button>';
+            return;
+        }
+
+        c.innerHTML =
+            '<label class="switch-row">' +
+                '<span class="switch-txt">Apposer ma signature</span>' +
+                '<input type="checkbox" id="' + switchId + '" onchange="' + majFn + '">' +
+            '</label>' +
+            '<button type="button" class="btn-ligne-supprimer" style="margin:-10px 0 16px;" onclick="fermerModal(\'' + modalOrigine + '\'); ouvrirSignatureModal(\'' + retourId + '\');">Modifier ma signature</button>';
+
+        document.getElementById(switchId).checked = signatureActif;
+    }
+
+    function majPrefSignature() {
+        signatureActif = document.getElementById('switchSignature').checked;
+        store.set(SIGNATURE_PREF_KEY, signatureActif);
+        syncSwitchesSignature();
+    }
+
+    function majPrefSignatureLibre() {
+        signatureActif = document.getElementById('switchSignatureLibre').checked;
+        store.set(SIGNATURE_PREF_KEY, signatureActif);
+        syncSwitchesSignature();
+    }
+
+    function syncSwitchesSignature() {
+        const a = document.getElementById('switchSignature');
+        const b = document.getElementById('switchSignatureLibre');
+        if (a) a.checked = signatureActif;
+        if (b) b.checked = signatureActif;
+    }
+
+    function appliquerSignature() {
+        const img = document.getElementById('inv-signature-img');
+        if (signatureDataUrl) img.src = signatureDataUrl;
+        document.getElementById('invoicePrintArea').classList.toggle('with-signature', signatureActif && !!signatureDataUrl);
+    }
 
     let currentFilter = 'toutes';
 
@@ -1505,8 +2034,8 @@
 
     /* ---------- DOCUMENT (BILAN / PROFORMA) ---------- */
     function ouvrirDocTypeModal() {
-        const enAttente = trips.filter(t => t.statut === 'attente' && t.clientId === activeClientId);
-        if (enAttente.length === 0) { alert("Aucune course en attente pour ce client."); return; }
+        syncSwitchesCachet();
+        renderSignatureSwitchArea('signatureSwitchArea', 'switchSignature', false);
         ouvrirModal('modalDocType');
     }
 
@@ -1524,6 +2053,8 @@
 
         const inv = document.getElementById('invoicePrintArea');
         inv.classList.toggle('is-proforma', isProforma);
+        appliquerCachet();
+        appliquerSignature();
 
         document.getElementById('inv-generated-date').innerText =
             'Le ' + today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -1557,6 +2088,12 @@
             ? "Document estimatif sans valeur contractuelle, établi à titre indicatif pour les prestations en cours. Une facture définitive sera émise après validation."
             : "Arrêté le présent bilan à la somme globale indiquée ci-dessus. Document établi pour valoir ce que de droit aux fins de règlement.";
 
+        document.getElementById('inv-thead-row').innerHTML = `
+            <th style="width:14%;">Date</th>
+            <th style="width:56%;">Désignation / trajet</th>
+            <th style="width:30%; text-align:right;">Montant (FCFA)</th>
+        `;
+
         const tbody = document.getElementById('inv-table-body');
         tbody.innerHTML = '';
         let total = 0;
@@ -1587,6 +2124,205 @@
 
         fermerModal('modalDocType');
         window.print();
+    }
+
+    /* ---------- PROFORMA LIBRE (prestations diverses, hors courses) ---------- */
+    function ouvrirProformaLibre() {
+        document.getElementById('formProformaLibre').reset();
+        document.getElementById('libreLignesContainer').innerHTML = '';
+        libreLigneCounter = 0;
+        ajouterLigneLibre();
+        recalculerTotalLibre();
+        syncSwitchesCachet();
+        renderSignatureSwitchArea('signatureSwitchAreaLibre', 'switchSignatureLibre', true);
+        ouvrirModal('modalProformaLibre');
+    }
+
+    function ajouterLigneLibre() {
+        libreLigneCounter++;
+        const id = libreLigneCounter;
+        const today = new Date().toISOString().split('T')[0];
+        const html = `
+            <div class="libre-ligne" data-ligne-id="${id}">
+                <div class="libre-ligne-row1 form-group">
+                    <label>Désignation</label>
+                    <input type="text" class="libre-designation" placeholder="Ex: Location véhicule, Manutention...">
+                </div>
+                <div class="libre-ligne-row2">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="libre-date" value="${today}">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantité</label>
+                        <input type="number" class="libre-quantite" min="0" step="any" value="1" oninput="recalculerLigneLibre(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>Unité</label>
+                        <input type="text" class="libre-unite" placeholder="voyage, kg..." list="listeUnites">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Prix unitaire (FCFA)</label>
+                    <input type="number" class="libre-prix" min="0" step="any" placeholder="0" oninput="recalculerLigneLibre(this)">
+                </div>
+                <div class="libre-ligne-montant">
+                    <div>
+                        <span class="lbl">Montant ligne</span><br>
+                        <strong class="libre-montant-affiche">0 FCFA</strong>
+                    </div>
+                    <button type="button" class="btn-ligne-supprimer" onclick="supprimerLigneLibre(${id})">Supprimer</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('libreLignesContainer').insertAdjacentHTML('beforeend', html);
+    }
+
+    function supprimerLigneLibre(id) {
+        const el = document.querySelector('.libre-ligne[data-ligne-id="' + id + '"]');
+        if (el) el.remove();
+        recalculerTotalLibre();
+    }
+
+    function recalculerLigneLibre(input) {
+        const ligne = input.closest('.libre-ligne');
+        const qte = parseFloat(ligne.querySelector('.libre-quantite').value) || 0;
+        const prix = parseFloat(ligne.querySelector('.libre-prix').value) || 0;
+        ligne.querySelector('.libre-montant-affiche').innerText = formatFCFA(qte * prix);
+        recalculerTotalLibre();
+    }
+
+    function recalculerTotalLibre() {
+        let total = 0;
+        document.querySelectorAll('.libre-ligne').forEach(ligne => {
+            const qte = parseFloat(ligne.querySelector('.libre-quantite').value) || 0;
+            const prix = parseFloat(ligne.querySelector('.libre-prix').value) || 0;
+            total += qte * prix;
+        });
+        document.getElementById('libreTotalAffiche').innerText = formatFCFA(total);
+    }
+
+    function genererProformaLibre(e) {
+        e.preventDefault();
+        const clientNom = document.getElementById('inputLibreClientNom').value.trim();
+        const clientInfo = document.getElementById('inputLibreClientInfo').value.trim();
+
+        const lignes = Array.from(document.querySelectorAll('.libre-ligne')).map(ligne => ({
+            date: ligne.querySelector('.libre-date').value,
+            designation: ligne.querySelector('.libre-designation').value.trim(),
+            quantite: parseFloat(ligne.querySelector('.libre-quantite').value) || 0,
+            unite: ligne.querySelector('.libre-unite').value.trim(),
+            prixUnitaire: parseFloat(ligne.querySelector('.libre-prix').value) || 0
+        })).filter(l => l.designation && l.quantite > 0);
+
+        if (!clientNom) { alert("Le nom du client est requis."); return; }
+        if (lignes.length === 0) { alert("Ajoute au moins une ligne avec une désignation et une quantité."); return; }
+
+        const today = new Date();
+        const compteLibre = proformasLibres.length + 1;
+        const ref = 'ZSX-PROL-' + today.getFullYear() + String(today.getMonth() + 1).padStart(2, '0')
+                  + '-' + String(compteLibre).padStart(3, '0');
+
+        const inv = document.getElementById('invoicePrintArea');
+        inv.classList.add('is-proforma');
+        appliquerCachet();
+        appliquerSignature();
+
+        document.getElementById('inv-generated-date').innerText =
+            'Le ' + today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('inv-eyebrow').innerHTML = 'Facture proforma — <span id="inv-ref">N° ' + ref + '</span>';
+        document.getElementById('inv-title').innerText = 'Facture proforma des prestations';
+
+        document.getElementById('inv-client-nom').innerHTML =
+            escapeHtml(clientNom) + '<br><small id="inv-client-legal">' + (clientInfo ? escapeHtml(clientInfo) : '') + '</small>';
+
+        document.getElementById('inv-statut').innerHTML =
+            'Estimation — non facturé<br><small><span id="inv-count">' + lignes.length + '</span> prestation(s)</small>';
+
+        document.getElementById('inv-total-lbl').innerText = 'Montant estimatif total';
+
+        document.getElementById('inv-sig-client').innerHTML =
+            'Pour ' + escapeHtml(clientNom) + '<br><span>Pour validation</span>';
+
+        document.getElementById('inv-foot-note').innerText =
+            "Document estimatif sans valeur contractuelle, établi à titre indicatif pour les prestations décrites ci-dessus. Une facture définitive sera émise après validation.";
+
+        document.getElementById('inv-thead-row').innerHTML = `
+            <th style="width:13%;">Date</th>
+            <th style="width:37%;">Désignation</th>
+            <th style="width:10%; text-align:center;">Qté</th>
+            <th style="width:15%; text-align:center;">Unité</th>
+            <th style="width:25%; text-align:right;">Montant (FCFA)</th>
+        `;
+
+        const tbody = document.getElementById('inv-table-body');
+        tbody.innerHTML = '';
+        let total = 0;
+
+        lignes.forEach(l => {
+            const montantLigne = l.quantite * l.prixUnitaire;
+            total += montantLigne;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="num">${l.date ? formatDateFR(l.date) : '—'}</td>
+                <td>${escapeHtml(l.designation)}</td>
+                <td class="ctr">${l.quantite}</td>
+                <td class="ctr">${escapeHtml(l.unite || '—')}</td>
+                <td class="amt">${formatFCFA(montantLigne)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('inv-total-amount').innerText = formatFCFA(total);
+
+        proformasLibres.unshift({
+            id: Date.now(),
+            ref: ref,
+            clientNom: clientNom,
+            clientInfo: clientInfo,
+            date: today.toISOString().split('T')[0],
+            total: total,
+            lignes: lignes
+        });
+        store.set(PROFORMA_LIBRE_KEY, proformasLibres);
+
+        fermerModal('modalProformaLibre');
+        window.print();
+    }
+
+    function supprimerProformaLibre(id) {
+        if (confirm("Supprimer cette proforma de l'historique ?")) {
+            proformasLibres = proformasLibres.filter(p => p.id !== id);
+            store.set(PROFORMA_LIBRE_KEY, proformasLibres);
+            renderProformasLibres();
+        }
+    }
+
+    function renderProformasLibres() {
+        const c = document.getElementById('libresListArchive');
+        if (!c) return;
+        if (proformasLibres.length === 0) {
+            c.innerHTML = `<div class="empty-state">Aucune proforma libre générée</div>`;
+            return;
+        }
+        c.innerHTML = proformasLibres.map(p => `
+            <div class="course-item is-settled">
+                <div class="course-header">
+                    <div>
+                        <div class="course-trajet">${escapeHtml(p.ref)}</div>
+                        <div class="course-date">${formatDateFR(p.date)} · ${escapeHtml(p.clientNom)} · ${p.lignes.length} ligne(s)</div>
+                    </div>
+                    <span class="badge-doctype proforma">Proforma</span>
+                </div>
+                <div class="course-footer" style="margin-top:14px;">
+                    <div>
+                        <span class="lbl">Montant estimatif</span>
+                        <span class="course-gain">${formatFCFA(p.total)}</span>
+                    </div>
+                    <button class="btn-delete" onclick="supprimerProformaLibre(${p.id})">Supprimer</button>
+                </div>
+            </div>
+        `).join('');
     }
 
     /* ---------- DOCUMENTS ARCHIVÉS (bilans + proformas, filtrés par client actif) ---------- */
@@ -1623,6 +2359,94 @@
             store.set(BILANS_KEY, bilans);
             renderBilans();
         }
+    }
+
+    /* ---------- SAUVEGARDE : EXPORT / IMPORT ---------- */
+    function exporterSauvegarde() {
+        const donnees = {
+            app: 'zadna-transport',
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            fondsDeDepart: fondsDeDepart,
+            clients: clients,
+            activeClientId: activeClientId,
+            trips: trips,
+            bilans: bilans,
+            proformasLibres: proformasLibres,
+            signatureDataUrl: signatureDataUrl,
+            signatureActif: signatureActif,
+            cachetActif: cachetActif
+        };
+
+        const blob = new Blob([JSON.stringify(donnees, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const dateStr = new Date().toISOString().split('T')[0];
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'zadna-sauvegarde-' + dateStr + '.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importerSauvegarde(event) {
+        const fichier = event.target.files[0];
+        if (!fichier) return;
+
+        const reader = new FileReader();
+        reader.onload = function () {
+            let donnees;
+            try {
+                donnees = JSON.parse(reader.result);
+            } catch (e) {
+                alert("Ce fichier n'est pas une sauvegarde valide (JSON illisible).");
+                event.target.value = '';
+                return;
+            }
+
+            if (!Array.isArray(donnees.clients) || !Array.isArray(donnees.trips) || !Array.isArray(donnees.bilans)) {
+                alert("Ce fichier ne correspond pas à une sauvegarde ZADNA Transport.");
+                event.target.value = '';
+                return;
+            }
+
+            const confirmation = confirm(
+                "Cette opération va REMPLACER toutes les données actuelles de cet appareil " +
+                "(" + clients.length + " client(s), " + trips.length + " course(s)) par celles du fichier " +
+                "(" + donnees.clients.length + " client(s), " + donnees.trips.length + " course(s)).\n\n" +
+                "Cette action est irréversible. Continuer ?"
+            );
+            if (!confirmation) { event.target.value = ''; return; }
+
+            clients = donnees.clients;
+            trips = donnees.trips;
+            bilans = donnees.bilans;
+            proformasLibres = Array.isArray(donnees.proformasLibres) ? donnees.proformasLibres : proformasLibres;
+            fondsDeDepart = typeof donnees.fondsDeDepart === 'number' ? donnees.fondsDeDepart : fondsDeDepart;
+            activeClientId = clients.some(c => c.id === donnees.activeClientId) ? donnees.activeClientId : clients[0].id;
+            signatureDataUrl = (typeof donnees.signatureDataUrl === 'string' && donnees.signatureDataUrl) ? donnees.signatureDataUrl : null;
+            signatureActif = typeof donnees.signatureActif === 'boolean' ? donnees.signatureActif : !!signatureDataUrl;
+            cachetActif = typeof donnees.cachetActif === 'boolean' ? donnees.cachetActif : cachetActif;
+
+            store.set(CLIENTS_KEY, clients);
+            store.set(STORAGE_KEY, trips);
+            store.set(BILANS_KEY, bilans);
+            store.set(PROFORMA_LIBRE_KEY, proformasLibres);
+            store.set(CAPITAL_KEY, fondsDeDepart);
+            store.set(ACTIVE_CLIENT_KEY, activeClientId);
+            store.set(SIGNATURE_KEY, signatureDataUrl);
+            store.set(SIGNATURE_PREF_KEY, signatureActif);
+            store.set(CACHET_KEY, cachetActif);
+
+            event.target.value = '';
+            majListeMarchandises();
+            render();
+            fermerModal('modalSauvegarde');
+            alert("Sauvegarde restaurée avec succès.");
+        };
+        reader.readAsText(fichier);
     }
 
     /* ---------- FILTRES ---------- */
@@ -1725,6 +2549,8 @@
 
     document.getElementById('inputDate').valueAsDate = new Date();
     majListeMarchandises();
+    syncSwitchesCachet();
+    initEcouteursCanvasSignature();
     render();
 </script>
 </body>
