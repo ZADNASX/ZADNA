@@ -452,6 +452,19 @@
         margin-top:5px;
         letter-spacing:0.5px;
     }
+    .badge-marchandise{
+        display:inline-block;
+        font-family:'JetBrains Mono', monospace;
+        font-size:9px;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        color:var(--c1);
+        border:1px solid #B7C4FF;
+        background:#F1F4FF;
+        padding:3px 7px;
+        margin-top:8px;
+    }
+
     .badge-status{
         font-family:'JetBrains Mono', monospace;
         font-size:9px;
@@ -798,6 +811,16 @@
             font-size:10.5px;
             color:#4A4A4A;
         }
+        .inv-marchandise{
+            display:block;
+            font-family:'JetBrains Mono', monospace;
+            font-size:8.5px;
+            letter-spacing:1.2px;
+            text-transform:uppercase;
+            color:#6A6A6A;
+            margin-top:3px;
+        }
+        .inv-marchandise::before{ content:'↳ '; }
         .inv-table td.amt{ text-align:right; font-weight:600; white-space:nowrap; }
         .inv-table tr:last-child td{ border-bottom:1.5px solid #0A0A0A; }
 
@@ -965,6 +988,11 @@
             <div class="form-group">
                 <label>Trajet / intitulé</label>
                 <input type="text" id="inputTrajet" placeholder="Cotonou — Parakou" required>
+            </div>
+            <div class="form-group">
+                <label>Marchandise transportée</label>
+                <input type="text" id="inputMarchandise" placeholder="Ex: Sable, Ciment, Gravats..." list="listeMarchandises" autocomplete="off">
+                <datalist id="listeMarchandises"></datalist>
             </div>
             <div class="form-group">
                 <label>Prix négocié Axolus (FCFA)</label>
@@ -1228,9 +1256,23 @@
     const DEFAULT_CLIENT_ID = 1;
 
     const initialData = [
-        { id: 1, date: '2026-08-01', trajet: 'Cotonou — Parakou', prixAxolus: 150000, coutVehicule: 90000, autresFrais: 15000, statut: 'attente', clientId: DEFAULT_CLIENT_ID },
-        { id: 2, date: '2026-08-03', trajet: 'Cotonou — Bohicon', prixAxolus: 80000,  coutVehicule: 50000, autresFrais: 8000,  statut: 'attente', clientId: DEFAULT_CLIENT_ID }
+        { id: 1, date: '2026-08-01', trajet: 'Cotonou — Parakou', marchandise: 'Sable', prixAxolus: 150000, coutVehicule: 90000, autresFrais: 15000, statut: 'attente', clientId: DEFAULT_CLIENT_ID },
+        { id: 2, date: '2026-08-03', trajet: 'Cotonou — Bohicon', marchandise: 'Ciment', prixAxolus: 80000,  coutVehicule: 50000, autresFrais: 8000,  statut: 'attente', clientId: DEFAULT_CLIENT_ID }
     ];
+
+    /* Suggestions de marchandises : base fixe + tout ce qui a déjà été saisi */
+    const MARCHANDISES_BASE = [
+        'Sable', 'Gravier', 'Gravats', 'Ciment', 'Fer à béton', 'Briques / parpaings',
+        'Bois', 'Carburant', 'Matériel BTP', 'Produits vivriers', 'Marchandises diverses'
+    ];
+
+    function majListeMarchandises() {
+        const saisies = trips.map(t => (t.marchandise || '').trim()).filter(Boolean);
+        const toutes = Array.from(new Set(MARCHANDISES_BASE.concat(saisies)))
+            .sort((a, b) => a.localeCompare(b, 'fr'));
+        const dl = document.getElementById('listeMarchandises');
+        if (dl) dl.innerHTML = toutes.map(m => `<option value="${escapeHtml(m)}"></option>`).join('');
+    }
 
     const capitalStocke = parseFloat(store.get(CAPITAL_KEY, null));
     let fondsDeDepart = isNaN(capitalStocke) ? 500000 : capitalStocke;
@@ -1263,6 +1305,7 @@
 
     function saveTrips() {
         store.set(STORAGE_KEY, trips);
+        majListeMarchandises();
         render();
     }
 
@@ -1412,6 +1455,7 @@
         e.preventDefault();
         const date         = document.getElementById('inputDate').value;
         const trajet       = document.getElementById('inputTrajet').value;
+        const marchandise  = document.getElementById('inputMarchandise').value.trim();
         const prixAxolus   = parseFloat(document.getElementById('inputPrixAxolus').value) || 0;
         const coutVehicule = parseFloat(document.getElementById('inputCoutVehicule').value) || 0;
         const autresFrais  = parseFloat(document.getElementById('inputAutresFrais').value) || 0;
@@ -1419,9 +1463,9 @@
 
         if (editId) {
             const idx = trips.findIndex(t => t.id === parseFloat(editId));
-            if (idx !== -1) trips[idx] = { ...trips[idx], date, trajet, prixAxolus, coutVehicule, autresFrais };
+            if (idx !== -1) trips[idx] = { ...trips[idx], date, trajet, marchandise, prixAxolus, coutVehicule, autresFrais };
         } else {
-            trips.unshift({ id: Date.now(), date, trajet, prixAxolus, coutVehicule, autresFrais, statut: 'attente', clientId: activeClientId });
+            trips.unshift({ id: Date.now(), date, trajet, marchandise, prixAxolus, coutVehicule, autresFrais, statut: 'attente', clientId: activeClientId });
         }
 
         saveTrips();
@@ -1435,6 +1479,7 @@
         document.getElementById('inputEditId').value      = t.id;
         document.getElementById('inputDate').value        = t.date;
         document.getElementById('inputTrajet').value      = t.trajet;
+        document.getElementById('inputMarchandise').value = t.marchandise || '';
         document.getElementById('inputPrixAxolus').value  = t.prixAxolus;
         document.getElementById('inputCoutVehicule').value= t.coutVehicule;
         document.getElementById('inputAutresFrais').value = t.autresFrais;
@@ -1521,7 +1566,7 @@
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td class="num">${formatDateFR(t.date)}</td>
-                <td>${escapeHtml(t.trajet)}</td>
+                <td>${escapeHtml(t.trajet)}${t.marchandise ? '<span class="inv-marchandise">' + escapeHtml(t.marchandise) + '</span>' : ''}</td>
                 <td class="amt">${formatFCFA(t.prixAxolus)}</td>
             `;
             tbody.appendChild(tr);
@@ -1536,7 +1581,7 @@
             clientId: activeClientId,
             date: today.toISOString().split('T')[0],
             total: total,
-            courses: enAttente.map(t => ({ date: t.date, trajet: t.trajet, prixAxolus: t.prixAxolus }))
+            courses: enAttente.map(t => ({ date: t.date, trajet: t.trajet, marchandise: t.marchandise || '', prixAxolus: t.prixAxolus }))
         });
         store.set(BILANS_KEY, bilans);
 
@@ -1652,6 +1697,7 @@
                         <div>
                             <div class="course-trajet">${escapeHtml(t.trajet)}</div>
                             <div class="course-date">${formatDateFR(t.date)}</div>
+                            ${t.marchandise ? `<span class="badge-marchandise">${escapeHtml(t.marchandise)}</span>` : ''}
                         </div>
                         <span class="badge-status ${pending ? 'pending' : 'settled'}">${pending ? 'En attente' : 'Réglé'}</span>
                     </div>
@@ -1678,6 +1724,7 @@
     }
 
     document.getElementById('inputDate').valueAsDate = new Date();
+    majListeMarchandises();
     render();
 </script>
 </body>
