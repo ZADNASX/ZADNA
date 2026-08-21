@@ -313,6 +313,47 @@
     .btn-group-row{ display:flex; gap:10px; }
     .btn-group-row .btn-secondary, .btn-group-row .btn-primary{ flex:1; margin-top:10px; }
 
+    /* ---------- ÉDITEUR DE POSITION (cachet + signature) ---------- */
+    .position-stage{
+        position:relative;
+        width:280px;
+        max-width:100%;
+        height:190px;
+        border:1.5px dashed var(--line);
+        background:var(--soft);
+        margin:0 auto;
+        overflow:hidden;
+        touch-action:none;
+    }
+    .position-item{
+        position:absolute;
+        left:0;
+        top:0;
+        cursor:grab;
+        touch-action:none;
+        user-select:none;
+        -webkit-user-select:none;
+    }
+    .position-item:active{ cursor:grabbing; }
+    #posCachet svg{ width:186px; height:auto; display:block; }
+    #posSignature{ width:150px; max-height:76px; display:block; z-index:2; }
+    .position-link{
+        display:block;
+        width:100%;
+        text-align:center;
+        background:none;
+        border:none;
+        font-family:'JetBrains Mono', monospace;
+        font-size:10px;
+        letter-spacing:1.2px;
+        text-transform:uppercase;
+        color:var(--grey);
+        cursor:pointer;
+        padding:4px 0 16px;
+        border-bottom:none;
+    }
+    .position-link:active{ color:var(--ink); }
+
     .libre-total-row{
         display:flex;
         justify-content:space-between;
@@ -994,16 +1035,16 @@
         }
         .sig-box span{ color:#8A8A8A; }
 
-        /* Cachet + signature imbriqués : la signature chevauche le cachet,
-           comme sur un document réellement paraphé et tamponné. */
+        /* Cachet + signature imbriqués, position libre (réglée dans l'éditeur de position).
+           Coordonnées appliquées via transform:translate() en JS, base left:0/top:0. */
         .inv-stamp-wrap{
             position:relative;
-            display:inline-block;
+            width:280px;
+            min-height:190px;
             margin-top:12px;
-            min-height:112px;
         }
 
-        .inv-cachet{ display:none; }
+        .inv-cachet{ display:none; position:absolute; left:0; top:0; }
         #invoicePrintArea.with-cachet .inv-cachet{ display:block; }
         .inv-cachet svg{
             width:186px;
@@ -1015,11 +1056,10 @@
         .inv-signature{
             display:none;
             position:absolute;
-            left:8px;
-            top:32px;
+            left:0;
+            top:0;
             width:150px;
             max-height:76px;
-            transform:rotate(-6deg);
             z-index:2;
             pointer-events:none;
             -webkit-print-color-adjust:exact;
@@ -1291,6 +1331,7 @@
             <input type="checkbox" id="switchCachet" onchange="majPrefCachet()">
         </label>
         <div id="signatureSwitchArea"></div>
+        <button type="button" class="position-link" onclick="fermerModal('modalDocType'); ouvrirPositionModal('docType');">↔ Position du cachet et de la signature</button>
 
         <div class="doctype-grid">
             <button type="button" class="btn-doctype" onclick="genererDocument('bilan')">
@@ -1345,6 +1386,7 @@
                 <input type="checkbox" id="switchCachetLibre" onchange="majPrefCachetLibre()">
             </label>
             <div id="signatureSwitchAreaLibre"></div>
+            <button type="button" class="position-link" onclick="fermerModal('modalProformaLibre'); ouvrirPositionModal('proformaLibre');">↔ Position du cachet et de la signature</button>
 
             <button type="submit" class="btn-primary">Générer la proforma</button>
         </form>
@@ -1385,6 +1427,55 @@
         <div class="btn-group-row">
             <button type="button" class="btn-secondary" style="margin-top:10px;" onclick="effacerSignatureCanvas()">Effacer</button>
             <button type="button" class="btn-primary" style="margin-top:10px;" onclick="enregistrerSignatureDessinee()">Enregistrer la signature</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 10 : POSITION DU CACHET ET DE LA SIGNATURE -->
+<div id="modalPosition" class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')) fermerPositionEtRetour();">
+    <div class="modal-sheet">
+        <div class="modal-header">
+            <span class="modal-title">Position cachet &amp; signature</span>
+            <button class="btn-close-modal" onclick="fermerPositionEtRetour()">✕</button>
+        </div>
+        <p class="modal-note">Fais glisser le cachet et la signature pour les placer exactement où tu veux sur le document.</p>
+
+        <div class="position-stage" id="positionStage">
+            <div class="position-item" id="posCachet">
+                <svg viewBox="0 0 300 176" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect x="5" y="5" width="290" height="166" fill="none" stroke="#3B5BFF" stroke-width="4.5"/>
+                    <rect x="14" y="14" width="272" height="148" fill="none" stroke="#3B5BFF" stroke-width="1.6"/>
+                    <g transform="translate(28,24) scale(0.5)">
+                        <line x1="60" y1="60" x2="60" y2="14" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="106" y2="60" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="60" y2="106" stroke="#3B5BFF" stroke-width="7"/>
+                        <line x1="60" y1="60" x2="14" y2="60" stroke="#3B5BFF" stroke-width="7"/>
+                        <circle cx="60" cy="14" r="10" fill="#3B5BFF"/>
+                        <circle cx="106" cy="60" r="10" fill="#3B5BFF"/>
+                        <circle cx="60" cy="106" r="10" fill="#3B5BFF"/>
+                        <circle cx="14" cy="60" r="10" fill="#3B5BFF"/>
+                        <circle cx="60" cy="60" r="14" fill="#3B5BFF"/>
+                        <circle cx="60" cy="60" r="5.5" fill="#FFFFFF"/>
+                    </g>
+                    <text x="100" y="50" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="700" font-size="26" letter-spacing="-0.4">ZADNA.SOL.X</text>
+                    <text x="100" y="70" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="11" letter-spacing="2.5">SARL</text>
+                    <line x1="30" y1="88" x2="270" y2="88" stroke="#3B5BFF" stroke-width="1.4"/>
+                    <text x="30" y="109" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="12.5">RCCM : RB/COT/26 B 44001</text>
+                    <text x="30" y="128" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="12.5">IFU : 3202682190953</text>
+                    <text x="30" y="150" fill="#3B5BFF" font-family="'Space Grotesk',sans-serif" font-weight="500" font-size="11.5">Cotonou, Bénin · 01 47 47 47 00</text>
+                </svg>
+            </div>
+            <img id="posSignature" class="position-item" src="" alt="Signature">
+        </div>
+
+        <div class="form-group" style="margin-top:16px;">
+            <label>Inclinaison de la signature</label>
+            <input type="range" id="rangeRotationSignature" min="-30" max="30" value="-6" oninput="majRotationApercu(this.value)">
+        </div>
+
+        <div class="btn-group-row">
+            <button type="button" class="btn-secondary" onclick="reinitialiserPosition()">Réinitialiser</button>
+            <button type="button" class="btn-primary" onclick="enregistrerPosition()">Enregistrer la position</button>
         </div>
     </div>
 </div>
@@ -1546,6 +1637,7 @@
     const CACHET_KEY = 'axolus_transport_cachet_v1';
     const SIGNATURE_KEY = 'axolus_transport_signature_v1';
     const SIGNATURE_PREF_KEY = 'axolus_transport_signature_pref_v1';
+    const POSITION_KEY = 'axolus_transport_position_v1';
     const CLIENTS_KEY = 'axolus_transport_clients_v1';
     const ACTIVE_CLIENT_KEY = 'axolus_transport_active_client_v1';
 
@@ -1830,6 +1922,108 @@
         document.getElementById('invoicePrintArea').classList.toggle('with-signature', signatureActif && !!signatureDataUrl);
     }
 
+    /* ---------- POSITION DU CACHET ET DE LA SIGNATURE (glisser-déposer) ---------- */
+    const POSITION_DEFAUT = { cachetX: 0, cachetY: 0, sigX: 8, sigY: 32, sigRot: -6 };
+
+    const positionStockee = store.get(POSITION_KEY, null);
+    let position = (positionStockee && typeof positionStockee === 'object')
+        ? Object.assign({}, POSITION_DEFAUT, positionStockee)
+        : Object.assign({}, POSITION_DEFAUT);
+
+    let apercuPosition = Object.assign({}, position);
+    let retourApresPosition = null;
+    let dragCiblePosition = null;
+    let dragDebutPosition = { x: 0, y: 0 };
+    let dragOffsetDebutPosition = { x: 0, y: 0 };
+
+    function appliquerPositionnement() {
+        const cachetEl = document.querySelector('#invoicePrintArea .inv-cachet');
+        const sigEl = document.getElementById('inv-signature-img');
+        if (cachetEl) cachetEl.style.transform = 'translate(' + position.cachetX + 'px, ' + position.cachetY + 'px)';
+        if (sigEl) sigEl.style.transform = 'translate(' + position.sigX + 'px, ' + position.sigY + 'px) rotate(' + position.sigRot + 'deg)';
+    }
+
+    function ouvrirPositionModal(retour) {
+        retourApresPosition = retour || null;
+        apercuPosition = Object.assign({}, position);
+
+        const sigPreview = document.getElementById('posSignature');
+        sigPreview.src = signatureDataUrl || '';
+        sigPreview.style.display = signatureDataUrl ? 'block' : 'none';
+
+        document.getElementById('rangeRotationSignature').value = apercuPosition.sigRot;
+        appliquerApercuPosition();
+        ouvrirModal('modalPosition');
+    }
+
+    function fermerPositionEtRetour() {
+        fermerModal('modalPosition');
+        if (retourApresPosition === 'docType') ouvrirModal('modalDocType');
+        else if (retourApresPosition === 'proformaLibre') ouvrirModal('modalProformaLibre');
+        retourApresPosition = null;
+    }
+
+    function appliquerApercuPosition() {
+        const cachetEl = document.getElementById('posCachet');
+        const sigEl = document.getElementById('posSignature');
+        cachetEl.style.transform = 'translate(' + apercuPosition.cachetX + 'px, ' + apercuPosition.cachetY + 'px)';
+        sigEl.style.transform = 'translate(' + apercuPosition.sigX + 'px, ' + apercuPosition.sigY + 'px) rotate(' + apercuPosition.sigRot + 'deg)';
+    }
+
+    function majRotationApercu(val) {
+        apercuPosition.sigRot = parseFloat(val);
+        appliquerApercuPosition();
+    }
+
+    function debutDragPosition(e, cible) {
+        dragCiblePosition = cible;
+        dragDebutPosition = { x: e.clientX, y: e.clientY };
+        dragOffsetDebutPosition = cible === 'cachet'
+            ? { x: apercuPosition.cachetX, y: apercuPosition.cachetY }
+            : { x: apercuPosition.sigX, y: apercuPosition.sigY };
+        if (e.currentTarget.setPointerCapture) { try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {} }
+    }
+
+    function dragPosition(e) {
+        if (!dragCiblePosition) return;
+        e.preventDefault();
+        const dx = e.clientX - dragDebutPosition.x;
+        const dy = e.clientY - dragDebutPosition.y;
+        if (dragCiblePosition === 'cachet') {
+            apercuPosition.cachetX = dragOffsetDebutPosition.x + dx;
+            apercuPosition.cachetY = dragOffsetDebutPosition.y + dy;
+        } else {
+            apercuPosition.sigX = dragOffsetDebutPosition.x + dx;
+            apercuPosition.sigY = dragOffsetDebutPosition.y + dy;
+        }
+        appliquerApercuPosition();
+    }
+
+    function finDragPosition() { dragCiblePosition = null; }
+
+    function initEcouteursPosition() {
+        const cachetEl = document.getElementById('posCachet');
+        const sigEl = document.getElementById('posSignature');
+        cachetEl.addEventListener('pointerdown', e => debutDragPosition(e, 'cachet'));
+        sigEl.addEventListener('pointerdown', e => debutDragPosition(e, 'signature'));
+        document.getElementById('positionStage').addEventListener('pointermove', dragPosition, { passive: false });
+        document.getElementById('positionStage').addEventListener('pointerup', finDragPosition);
+        document.getElementById('positionStage').addEventListener('pointerleave', finDragPosition);
+        document.getElementById('positionStage').addEventListener('pointercancel', finDragPosition);
+    }
+
+    function reinitialiserPosition() {
+        apercuPosition = Object.assign({}, POSITION_DEFAUT);
+        document.getElementById('rangeRotationSignature').value = POSITION_DEFAUT.sigRot;
+        appliquerApercuPosition();
+    }
+
+    function enregistrerPosition() {
+        position = Object.assign({}, apercuPosition);
+        store.set(POSITION_KEY, position);
+        fermerPositionEtRetour();
+    }
+
     let currentFilter = 'toutes';
 
     function saveTrips() {
@@ -2055,6 +2249,7 @@
         inv.classList.toggle('is-proforma', isProforma);
         appliquerCachet();
         appliquerSignature();
+        appliquerPositionnement();
 
         document.getElementById('inv-generated-date').innerText =
             'Le ' + today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -2227,6 +2422,7 @@
         inv.classList.add('is-proforma');
         appliquerCachet();
         appliquerSignature();
+        appliquerPositionnement();
 
         document.getElementById('inv-generated-date').innerText =
             'Le ' + today.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -2375,7 +2571,8 @@
             proformasLibres: proformasLibres,
             signatureDataUrl: signatureDataUrl,
             signatureActif: signatureActif,
-            cachetActif: cachetActif
+            cachetActif: cachetActif,
+            position: position
         };
 
         const blob = new Blob([JSON.stringify(donnees, null, 2)], { type: 'application/json' });
@@ -2429,6 +2626,7 @@
             signatureDataUrl = (typeof donnees.signatureDataUrl === 'string' && donnees.signatureDataUrl) ? donnees.signatureDataUrl : null;
             signatureActif = typeof donnees.signatureActif === 'boolean' ? donnees.signatureActif : !!signatureDataUrl;
             cachetActif = typeof donnees.cachetActif === 'boolean' ? donnees.cachetActif : cachetActif;
+            position = (donnees.position && typeof donnees.position === 'object') ? Object.assign({}, POSITION_DEFAUT, donnees.position) : position;
 
             store.set(CLIENTS_KEY, clients);
             store.set(STORAGE_KEY, trips);
@@ -2439,6 +2637,7 @@
             store.set(SIGNATURE_KEY, signatureDataUrl);
             store.set(SIGNATURE_PREF_KEY, signatureActif);
             store.set(CACHET_KEY, cachetActif);
+            store.set(POSITION_KEY, position);
 
             event.target.value = '';
             majListeMarchandises();
@@ -2551,6 +2750,7 @@
     majListeMarchandises();
     syncSwitchesCachet();
     initEcouteursCanvasSignature();
+    initEcouteursPosition();
     render();
 </script>
 </body>
